@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlaughtCure Project</title>
+    <style>
+        :root {
+            --primary-color: #c52a25;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --light-red: #e57373;
+            --dark-red: #b71c1c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Added from second CSS block */
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header styles from second block (merged and prioritized) */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-img {
+            height: 70px; /* Or your desired height */
+            margin-right: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.1);
+        }
+        
+        .logo-text { /* Renamed from .logo to .logo-text for clarity */
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-toggle {
+            display: none; /* Will be shown in media query */
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        nav { /* Combined nav styles */
+            display: flex;
+            justify-content: space-between; /* This might be space-between or flex-end depending on .nav-links */
+            align-items: center;
+            width: 100%; /* Added from second block */
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap; /* Added from second block for responsiveness */
+            justify-content: flex-end; /* Added from second block */
+        }
+        
+        .nav-links > li {
+            position: relative;
+            margin-left: 1rem; /* Adjusted from 1.5rem for consistency with second block */
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0.7rem; /* Adjusted padding from second block */
+            display: block;
+            border-radius: 4px; /* Added from second block */
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Hover from second block */
+            color: #ffcccc;
+        }
+        
+        .dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown > a { /* Style for dropdown link from second block */
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Arrow for "Log Books" and "Documents" dropdown */
+        .dropdown > a::after { 
+            content: "▼";
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 4px;
+            margin-top: 5px; /* Adjusted from 10px */
+            opacity: 0; /* For transition - from second block */
+            transform: translateY(-10px); /* For transition - from second block */
+            transition: opacity 0.3s, transform 0.3s; /* From second block */
+        }
+        
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: var(--primary-color);
+        }
+        
+        /* Original hover display for Log Books, kept for compatibility */
+        .dropdown:hover .dropdown-content { 
+            display: block;
+            opacity: 1; /* Ensure it's visible with new transition styles */
+            transform: translateY(0); /* Ensure it's positioned correctly */
+        }
+
+        /* JS-controlled active state for Documents dropdown from second block */
+        .dropdown.active .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 1s ease; /* Added from second block */
+        }
+
+        @keyframes fadeIn { /* Added from second block */
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--primary-color);
+            animation: expandWidth 1.5s ease; /* Added from second block */
+        }
+
+        @keyframes expandWidth { /* Added from second block */
+            from { width: 0; }
+            to { width: 100px; }
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--light-red);
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        /* Graph and Tables */
+        .graph-container {
+            margin: 2rem 0;
+            text-align: center;
+            position: relative; /* Added from second block */
+        }
+        
+        .graph-img {
+            max-width: 70%; /* Reduced size by 30% from original 100% */
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container { /* Added from second block, for Chart.js if used */
+            height: 500px;
+            margin: 2rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        /* Team Section */
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .team-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .team-info {
+            padding: 1.5rem;
+        }
+        
+        .team-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .contact-info {
+            margin-top: 1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-item i { /* This targets <i> FontAwesome icons if used */
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Icons (custom SVG icons) */
+        .fa { /* This class is used with <span> for custom SVG icons */
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            vertical-align: middle;
+        }
+        
+        .fa-envelope {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23c52a25' d='M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z'/%3E%3C/svg%3E");
+        }
+        
+        .fa-phone {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23c52a25' d='M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z'/%3E%3C/svg%3E");
+        }
+
+        /* Navigation Menu for Sections (from second block) */
+        .section-nav {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .section-nav a {
+            display: block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 10px 0;
+            background-color: #ddd;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .section-nav a:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+        
+        .section-nav a.active {
+            background-color: var(--primary-color);
+            transform: scale(1.2);
+        }
+        
+        .section-nav a span {
+            position: absolute;
+            right: 20px;
+            top: -5px;
+            background-color: #333;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .section-nav a:hover span {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Scroll Animation (from second block) */
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .scroll-animation.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive Navigation (merged) */
+        @media screen and (max-width: 1200px) { /* Increased breakpoint from 768px for earlier nav wrapping */
+            .nav-links {
+                /* flex-wrap: wrap; already added above */
+                justify-content: center; /* Center links when wrapped */
+            }
+            
+            .nav-links > li {
+                margin: 5px; /* Adjust margin for wrapped items */
+            }
+            
+            .section-nav {
+                display: none; /* Hide side-nav on smaller screens */
+            }
+        }
+        
+        @media screen and (max-width: 992px) { /* Adjusted breakpoint for hamburger menu */
+            .header-container {
+                 /* Keep flex-direction: row; or remove for default block stacking if preferred for logo above menu */
+            }
+            
+            .menu-toggle {
+                display: block;
+                /* position: absolute; /* Removed absolute positioning for better flow */
+                /* right: 20px; */
+                /* top: 20px; */
+                order: 1; /* Make toggle appear after nav links if nav is not collapsing fully */
+                margin-left: auto; /* Push toggle to the right */
+            }
+
+            nav { /* Ensure nav itself doesn't take full width if logo is on the left */
+                width: auto; 
+            }
+            
+            .nav-links {
+                display: none; /* Hide by default */
+                width: 100%;
+                flex-direction: column;
+                text-align: center;
+                margin-top: 15px;
+                background-color: var(--primary-color); /* Add background for dropdown feel */
+                position: absolute; /* Position it below the header */
+                top: 100%; /* Start right below the header */
+                left: 0;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+            
+            .nav-links.active { /* This class will be toggled by JS */
+                display: flex;
+            }
+            
+            .nav-links > li {
+                margin: 10px 0; /* Adjust margin for vertical layout */
+                width: 100%;
+            }
+
+            .nav-links a:hover {
+                background-color: var(--dark-red);
+            }
+            
+            .dropdown-content {
+                position: static; /* Make dropdown content flow naturally in mobile menu */
+                box-shadow: none;
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.1); /* Lighten for contrast */
+                opacity: 1; /* Always visible when parent is */
+                transform: translateY(0); /* Reset transform */
+                margin-top: 0;
+                transition: none; /* Remove transition for static display */
+            }
+
+            .dropdown:hover .dropdown-content { /* Disable hover effect for parent */
+                 /* display: none; /* Let click/active state control it */
+            }
+             .dropdown.active .dropdown-content {
+                display: block; /* Ensure it shows when parent is active */
+            }
+            
+            .dropdown-content a {
+                color: white;
+                padding: 10px 15px;
+            }
+            .dropdown-content a:hover {
+                background-color: var(--dark-red);
+                color: #ffcccc;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-container">
+                <div class="logo-container">
+                    <img src="Logo.png" alt="SlaughtCure Logo" class="logo-img"> 
+                    <div class="logo-text">SlaughtCure</div>
+                </div>
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav>
+                    <ul class="nav-links" id="nav-links">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#methods">Methods</a></li>
+                        <li><a href="#results">Results</a></li>
+                        <li><a href="#conclusion">Conclusion</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li class="dropdown">
+                            <a>Log Books</a> <div class="dropdown-content">
+                                <a href="https://docs.google.com/document/d/1Dhx0OuV6TV8A0UKR2pSbj8rJs4vYxi-U8iMhVINjqFs/edit?tab=t.0" target="_blank">Ahmed Saif</a>
+                                <a href="https://docs.google.com/document/d/1fAKoFWuudVAQLFNsvwgK9hJb4mi25fBYJzMe4J1taWY/edit?usp=sharing" target="_blank">Seif Adel</a>
+                                <a href="#" target="_blank">Sherbiny</a> <a href="#" target="_blank">Shehab Hani</a> </div>
+                        </li>
+                        <li class="dropdown" id="documents-dropdown">
+                            <a>Documents</a> <div class="dropdown-content">
+                                <a href="https://drive.google.com/file/d/1gLc9FBFc0N_FGnZc1uBbQbJpQM26r0aA/view" target="_blank">A4 Poster</a>
+                                <a href="https://drive.google.com/file/d/1xuzuSCorb4UnUS7jV9lCZ5VzhUHYmNFS/view" target="_blank">Full Size</a>
+                                <a href="https://drive.google.com/file/d/11nQ9ssIGkscamiYAB50oA_680hO04Hew/view" target="_blank">Portfolio</a>
+                                <a href="https://drive.google.com/file/d/1HMi69C7ebvLph3M1AxGd6plpT6RAqXG2/view" target="_blank">Business Model</a>
+                                <a href="https://drive.google.com/file/d/1pKlDB8DFuXrYJa02cMl3AnZQiidrbbG-/view" target="_blank">Handout</a>
+                                <a href="https://drive.google.com/file/d/1GB3eJbPqmfx4Vdj6CcILljEN3lj-fLPm/view" target="_blank">Brochure</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="about">
+            <h1>SlaughtCure Project</h1>
+            <h2>Abstract</h2>
+            <p>In Egypt, the agriculture sector faces significant challenges, ranging from urban encroachment to salinization, but most importantly, the usage of unconventional and untreated wastewater resources in irrigation. Poultry farms, especially Abu Fayad farm in El-Sinbillawin, contribute significantly to this problem, disposing 54,750 liters of wastewater and 3,898 liters of blood annually in nearby agricultural lands. These disposals pose severe risks to both lands and the surrounding vicinities.</p>
+            <p>Although there are some proposed field solutions for treating blood-mixed water, most of them are meant to serve hospitals, nursing homes, and pharmaceutical industries; never for local poultry farms or small scale use. The purpose of this study is to provide a solution that ensures a life long treatment approach, integrated with a feedback system that is interactive with the parameters concentration of the water sample, giving the poultry farm a clean, healthy disposals that aren't harmful to the soil and local environment.</p>
+            <p>Of the study findings, the prototype could achieve the three main design requirements, yielding a TDS reduction percentage of 59.09%, a turbidity reduction of 93.88%, a final pH of 6.55, and a power consumption of 45.5W per liter of sample. Consequently, the major conclusion is that the project proved successful and efficient in treating poultry farms' wastewater, further solving the grand challenge of Improving sources of clean water.</p>
+        </section>
+
+        <section id="methods">
+            <h2>Methods</h2>
+            <p><strong>1. System Design and Planning:</strong> The project began with detailed planning to structure the prototype's workflow. A 3D simulation was created to visualize the design, as shown in Figure 2.</p>
+            <p><strong>2. Base Structure Assembly:</strong> The prototype was built as a vertical tower of 10 flower-like plant pots. Containers for each treatment phase were fixed in descending order, with pipes and pumps regulating water flow.</p>
+            <p><strong>3. Screening, DAF, Coagulation, and Flocculation Phases:</strong> A mesh layer was glued inside the first container for physical screening. In the second, an air pump with a 1mm nozzle created a Dissolved Air Flotation (DAF) system. A web of mesh and bandage layers filtered rising FOG and contaminants. For coagulation and flocculation, lemon, vinegar, and cactus cladodes SlaughtCure mucilage—extracted, cleaned, and boiled in distilled water—were used as natural agents to enhance sediment removal.</p>
+            <p><strong>4. Odor Elimination Phase:</strong> The third container was filled with layers of tourmaline, zeolite, calcite, activated carbon, sand, and cotton to filter remaining impurities and eliminate odors.</p>
+            <p><strong>5. CDI and UV Chamber Design:</strong> CDI electrodes were made from pencil-extracted graphite, activated carbon, water, and gelatin, then heated at 80°C and dried overnight. Electrodes were fixed in the fourth container and powered by crocodile clips. A UV bulb and air pump ensured sterilization and stirring. A final container connected to the second one completed the cycle.</p>
+            <p><strong>6. Feedback & Circuit Design:</strong> A 10A/12V power supply powered 5 pumps, 2 vacuum pumps, and 3 sensors (pH, TDS, turbidity), all linked to a Raspberry Pi and Arduino relays. This system was linked to a mobile app, in which its design was made by Figma, and converted into code by Android Studio Code.</p>
+        </section>
+
+        <section id="results">
+            <h2>Results</h2>
+            <h3>I. Parameters Concentration (Turbidity, TDS, and pH)</h3>
+            <p>Over a 4-hour duration and through 5 continuous cycles, the system achieved significant reductions in key parameter concentrations. Turbidity decreased from 930 NTU to 5 NTU, TDS levels from 1078.3 ppm to 441.4 ppm, and pH increased from 5.71 to 6.55, as shown in Figure 9, successfully meeting the design requirements.</p>
+            
+            <div class="graph-container">
+                 <img src="parameters results.jpg" alt="SlaughtCure performance across 5 treatment cycles" class="graph-img" id="performance-graph">
+                <figcaption>Figure 9: SlaughtCure performance across 5 treatment cycles</figcaption>
+            </div>
+            
+            <h3>II. Consumed Power per Liter of Sample</h3>
+            <p>The system, including the feedback system and pumps, consumed 45.5 Watts per liter of sample (one cycle). The components with the highest power consumption were the Air pump, with a consumption ranging from 1.5W to 3.0W, the UV light bulb, and the water pumps. A detailed breakdown of each component is shown in Table 2.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Working voltage</th>
+                        <th>Working current</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Component Working voltage</td> <td>DC12V</td>
+                        <td>0.5-0.7A</td>
+                    </tr>
+                    <tr>
+                        <td>Water pumps</td>
+                        <td>6V</td>
+                        <td>0.05 A</td>
+                    </tr>
+                    <tr>
+                        <td>Air pump</td>
+                        <td>6V</td>
+                        <td>250 mA – 500 mA</td>
+                    </tr>
+                    <tr>
+                        <td>CDI</td>
+                        <td>3.3V</td>
+                        <td>~10–30 mA</td>
+                    </tr>
+                    <tr>
+                        <td>UV light bulb</td>
+                        <td>6V</td>
+                        <td>80 mA – 500 mA</td>
+                    </tr>
+                    <tr>
+                        <td>Relay</td>
+                        <td>5V or 6V</td>
+                        <td>Coil current (per relay) ~70 mA – 90 mA</td>
+                    </tr>
+                    <tr>
+                        <td>PH sensor</td>
+                        <td>5V</td>
+                        <td>~5 mA – 10 mA</td>
+                    </tr>
+                    <tr>
+                        <td>Turbidity sensor</td>
+                        <td>5V</td>
+                        <td>~30 mA – 40 mA</td>
+                    </tr>
+                    <tr>
+                        <td>TDS sensor</td>
+                        <td>3.3V – 5V</td>
+                        <td>~3 mA – 10 mA</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>III. Treatment Efficiencies</h3>
+            <p>From an initial water sample of 1 liter, the output volume was 678 mL, resulting in a treated water recovery efficiency of 67%. Turbidity, TDS, and pH had removal efficiencies of 93.88%, 59.09%, and 85.6%, as shown in Table 3.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Efficiency (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Turbidity</td>
+                        <td>93.88%</td>
+                    </tr>
+                    <tr>
+                        <td>TDS</td>
+                        <td>59.09%</td>
+                    </tr>
+                    <tr>
+                        <td>pH</td>
+                        <td>85.6%</td>
+                    </tr>
+                    <tr>
+                        <td>Volume Recovery</td>
+                        <td>67.8%</td> </tr>
+                </tbody>
+            </table>
+            
+            <h3>IV. Life Expectancy of The Prototype</h3>
+            <p>The life expectancy of the prototype was calculated to be 13 cycles. After that, the electrodes would corrode, reducing the CDI efficiency, the organic filter (sand & gravel, etc.) would clog, and the pumps could also be clogged with lipids and sediments.</p>
+        </section>
+        
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>The SlaughtCure project successfully developed an effective solution for treating poultry farm wastewater, meeting all major design requirements. With high reduction efficiencies for turbidity (93.88%), TDS (59.09%), and improved pH levels (from 5.71 to 6.55), the system demonstrates considerable potential for implementation in small-scale poultry operations.</p>
+            <p>The integration of natural coagulants, physical filtration, capacitive deionization, and UV sterilization proved to be a comprehensive approach to treating blood-contaminated wastewater. With a moderate power consumption of 45.5W per liter and a volume recovery rate of 67.8%, the system strikes a balance between effectiveness and resource efficiency.</p>
+            <p>The project directly addresses the grand challenge of improving clean water sources in agricultural settings, providing a sustainable alternative to the current practice of untreated wastewater disposal. By focusing on local implementation and utilizing accessible materials, SlaughtCure represents a practical step toward mitigating water pollution from poultry operations.</p>
+        </section>
+
+        <section id="team"> <h2>Meet Our Team</h2>
+            <div class="team-container">
+                <div class="team-member">
+                    <img src="Ahmed.jpg" class="team-img" alt="Ahmed Saif El-Deen Rezk">
+                    <div class="team-info">
+                        <h3>Ahmed Saif El-Deen Rezk</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <span class="fa fa-envelope"></span>
+                                <span>ahmedsaifeldeen1314@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="fa fa-phone"></span>
+                                <span>01091310012</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <img src="seif.jpg" class="team-img" alt="Seif Adel Gamal">
+                    <div class="team-info">
+                        <h3>Seif Adel Gamal</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <span class="fa fa-envelope"></span>
+                                <span>seifadelgd@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="fa fa-phone"></span>
+                                <span>01091654301</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <img src="shehab.jpg" class="team-img" alt="Shehab Hani Mohamed">
+                    <div class="team-info">
+                        <h3>Shehab Hani Mohamed</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <span class="fa fa-envelope"></span>
+                                <span>hanyshehab210@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="fa fa-phone"></span>
+                                <span>01011407205</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <img src="Sherbieny cut4.jpg" class="team-img" alt="Mohamed Ahmed El-Sherbiny"> <div class="team-info">
+                        <h3>Mohamed Ahmed El-Sherbiny</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <span class="fa fa-envelope"></span>
+                                <span>melshirbeni50@gmail.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="fa fa-phone"></span>
+                                <span>01080287832</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="acknowledgment">
+            <h2>Acknowledgment</h2>
+            <p>We would like to express our sincere gratitude to our project advisors and mentors for their continuous guidance and support throughout this research. Special thanks to Abu Fayad farm in El-Sinbillawin for their cooperation and providing us with valuable insights into poultry farm operations.</p>
+            <p>We are also thankful to the laboratory facilities that allowed us to conduct our experiments and tests. This project would not have been possible without the financial support received from our institution and the technical assistance provided by the engineering department.</p>
+            <p>Finally, we extend our appreciation to our families for their unwavering encouragement and understanding during the long hours dedicated to this project.</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 SlaughtCure Project Team. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <div class="section-nav" id="section-nav-dots">
+        <a href="#about" data-section="about"><span>About</span></a>
+        <a href="#methods" data-section="methods"><span>Methods</span></a>
+        <a href="#results" data-section="results"><span>Results</span></a>
+        <a href="#conclusion" data-section="conclusion"><span>Conclusion</span></a>
+        <a href="#team" data-section="team"><span>Team</span></a>
+        <a href="#acknowledgment" data-section="acknowledgment"><span>Acknowledgment</span></a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS for animations if you are using it
+            if (typeof AOS !== 'undefined') {
+                AOS.init();
+            }
+
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Dropdown toggle for "Documents" (click-based)
+            const documentsDropdown = document.getElementById('documents-dropdown');
+            if (documentsDropdown) {
+                const documentsLink = documentsDropdown.querySelector('a'); // Get the link inside
+                documentsLink.addEventListener('click', function(event) {
+                    // Prevent default if it's just a placeholder link '#'
+                    if (documentsLink.getAttribute('href') === '#' || !documentsLink.getAttribute('href')) {
+                        event.preventDefault();
+                    }
+                    documentsDropdown.classList.toggle('active');
+                });
+            }
+            
+            // Note: The "Log Books" dropdown uses CSS :hover by default from the original merged code.
+            // If you want click toggle for "Log Books" too, you'd add similar JS for it.
+            // Example for Log Books click toggle (optional, as hover works):
+            /*
+            const logBooksDropdown = document.querySelector('.nav-links .dropdown:not(#documents-dropdown)'); // A way to select the first dropdown
+            if (logBooksDropdown) {
+                const logBooksLink = logBooksDropdown.querySelector('a');
+                logBooksLink.addEventListener('click', function(event) {
+                    if (logBooksLink.getAttribute('href') === '#' || !logBooksLink.getAttribute('href')) {
+                        event.preventDefault();
+                    }
+                    logBooksDropdown.classList.toggle('active');
+
+                    // Close other dropdowns if open
+                    if (documentsDropdown && documentsDropdown !== logBooksDropdown) {
+                        documentsDropdown.classList.remove('active');
+                    }
+                });
+            }
+            */
+
+
+            // Side navigation active state and scroll animations
+            const sections = document.querySelectorAll('main section');
+            const sideNavLinks = document.querySelectorAll('.section-nav a');
+            const scrollElements = document.querySelectorAll('.scroll-animation');
+
+            const activateSideNavLink = (sectionId) => {
+                sideNavLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            const handleScrollAnimations = () => {
+                let currentSection = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                        currentSection = section.getAttribute('id');
+                        
+                        // Add active class for scroll animation to the section itself
+                        if (!section.classList.contains('active')) {
+                           section.classList.add('active'); // For section fadeIn
+                        }
+                    }
+                });
+
+                if (currentSection) {
+                    activateSideNavLink(currentSection);
+                }
+
+                // For other scroll elements (if any, not explicitly defined in HTML structure for this class)
+                scrollElements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    if (elementTop < windowHeight - 50) { // Trigger when element is 50px from bottom
+                        el.classList.add('active');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', handleScrollAnimations);
+            handleScrollAnimations(); // Initial check
+
+            // Chart.js Example (if you plan to use it, replace img with canvas)
+            // This is just a placeholder, you'd need a <canvas id="myChart"></canvas> in results section
+            /*
+            const ctx = document.getElementById('myChart'); // Get canvas element
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line', // or 'bar', 'pie', etc.
+                    data: {
+                        labels: ['Cycle 1', 'Cycle 2', 'Cycle 3', 'Cycle 4', 'Cycle 5'],
+                        datasets: [{
+                            label: 'Turbidity (NTU)',
+                            data: [930, 400, 150, 50, 5], // Example data
+                            borderColor: 'var(--primary-color)',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'TDS (ppm)',
+                            data: [1078.3, 800, 600, 500, 441.4], // Example data
+                            borderColor: 'var(--light-red)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // Important for .chart-container height
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            */
+        });
+    </script>
+</body>
+</html>
